@@ -1,25 +1,57 @@
 import logo from './logo.svg';
+import React from 'react';
+import { cardData } from './cardData';
+import Card from './card';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component {
+  constructor() {
+      super();
+      this.state = {
+          cardData: []
+      };
+  }
+
+  componentDidMount() {
+      this.setState({ cardData: cardData });
+  }
+
+  shuffleBackward = () => {
+      const { cardData } = this.state;
+      const newCardData = [cardData[6], ...cardData.slice(0, 6)];
+      this.setState({ cardData: newCardData });
+  }
+
+  shuffleForward = () => {
+      const { cardData } = this.state;
+      const newCardData = [...cardData.slice(1), cardData[0]];
+      this.setState({ cardData: newCardData });
+  }
+
+  render() {
+      return (
+          <div className='App'>
+              <h1 className='title'>
+                  Flashback
+              </h1>
+              <p className='sub-title'>
+                  An interactive flashcard app.
+              </p>
+              <div className='card-list'>
+                  {this.state.cardData.map((card, index) => <Card key={index} index={index} front={card.front} back={card.back} />)}
+              </div>
+              <div className='buttons'>
+                  <button onClick={() => this.shuffleBackward()}>
+                      &lt;
+                  </button>
+                  <button onClick={() => this.shuffleForward()}>
+                      &gt;
+                  </button>
+              </div>
+          </div> 
+      );
+  }
 }
 
 export default App;
